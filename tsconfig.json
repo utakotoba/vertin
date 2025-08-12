@@ -9,13 +9,17 @@
     "strict": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "declaration": true,
     "noEmit": true,
+    "isolatedDeclarations": true,
     "skipLibCheck": true
   },
   "include": [
-    "eslint.config.ts"
+    "packages/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "eslint.config.ts",
+    "**/rolldown.config.ts"
   ]
 }

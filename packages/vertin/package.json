@@ -11,5 +11,19 @@
     "url": "git+https://github.com/utakotoba/vertin.git",
     "directory": "packages/vertin"
   },
-  "keywords": ["cli", "args"]
+  "keywords": ["cli", "args"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rolldown -c rolldown.config.ts"
+  }
 }
