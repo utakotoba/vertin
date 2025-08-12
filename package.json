@@ -1,0 +1,7 @@
+{
+  "name": "@vertin/monorepo",
+  "private": true,
+  "version": "0.1.0-dev",
+  "description": "A universal command line app helper",
+  "license": "MPL-2.0"
+}

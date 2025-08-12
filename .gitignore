@@ -1,0 +1,5 @@
+# runtime and dependencies
+node_modules
+
+# os related
+.DS_Store
