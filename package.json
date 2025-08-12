@@ -4,6 +4,7 @@
   "private": true,
   "description": "A universal command line app helper",
   "license": "MPL-2.0",
+  "workspaces": ["packages/*"],
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
