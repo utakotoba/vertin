@@ -63,5 +63,10 @@
     "markdown",
     "json",
     "jsonc"
+  ],
+  // workspace dictionary
+  "cSpell.words": [
+    "rolldown",
+    "vertin"
   ]
 }
