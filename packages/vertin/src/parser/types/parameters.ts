@@ -59,19 +59,29 @@ export type _ParserBaseOption<T extends ResolvableParameter> = {
    */
   readonly default?: _ResolveParameterType<T>
 } & (
-  _ResolveParameterType<T> extends any[]
-    ? {
-        /**
-         * Expected number of values for an array parameter.
-         * - A numeric literal (`1`, `2`, etc.) to require that many values.
-         * - `"all"` to consume all remaining values. Only the last parameter could set this.
-         *
-         * @default 1
-         */
-        readonly count?: number | 'all'
-      }
-    : Record<never, never>
-)
+    _ResolveParameterType<T> extends any[]
+      ? {
+          /**
+           * Expected number of values for an array parameter.
+           * - A numeric literal (`1`, `2`, etc.) to require that many values.
+           * - `"all"` to consume all remaining values. Only the last parameter could set this.
+           *
+           * @default 1
+           */
+          readonly count?: number | 'all'
+        }
+      : Record<never, never>
+  )
+
+/**
+ * @name ParserArgumentOption
+ * @description Option definition for a positional argument parameter.
+ * Unlike flags, arguments cannot have aliases.
+ */
+export type ParserArgumentOption
+  = ResolvableParameter extends infer T ? (
+    T extends ResolvableParameter ? _ParserBaseOption<T> : never
+  ) : never
 
 /**
  * @name ParserFlagOption
@@ -91,11 +101,33 @@ export type ParserFlagOption
   ) : never
 
 /**
- * @name ParserArgumentOption
- * @description Option definition for a positional argument parameter.
- * Unlike flags, arguments cannot have aliases.
+ * @name _ParsedParameter
+ * @description
+ * Maps a record of `_ParserBaseOption`s to their corresponding runtime values.
+ *
+ * This type produces a new object type where:
+ * 1. Keys corresponding to options with `required: true` are required.
+ * 2. Keys corresponding to options with a `default` value are always required,
+ *    even if `required` is `false` or omitted.
+ * 3. Keys corresponding to options where `required` is `false` or omitted and
+ *    `default` is not provided become optional.
  */
-export type ParserArgumentOption
-  = ResolvableParameter extends infer T ? (
-    T extends ResolvableParameter ? _ParserBaseOption<T> : never
-  ) : never
+export type _ParsedParameter<
+  T extends Record<string, _ParserBaseOption<any>>,
+> = {
+  // Required keys: required:true or default exists
+  [K in keyof T as T[K]['required'] extends true
+    ? K
+    : T[K]['default'] extends undefined
+      ? never
+      : K
+  ]: _ResolveParameterType<T[K]['type']>
+} & {
+  // Optional keys: required:false/omitted and no default
+  [K in keyof T as T[K]['required'] extends true
+    ? never
+    : T[K]['default'] extends undefined
+      ? K
+      : never
+  ]?: _ResolveParameterType<T[K]['type']>
+}
