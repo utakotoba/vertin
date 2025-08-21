@@ -1,10 +1,10 @@
 /**
- * @name ResolvableParameter
- * @description Constructor types that the parser can resolve into runtime values.
+ * @name BasicResolvableParameter
+ * @description Constructor types that the parser can resolve as basic parameter type
  * Supports single values (`StringConstructor`, `NumberConstructor`, `BooleanConstructor`)
  * or array forms (`StringConstructor[]`, etc.) for multi-value parameters.
  */
-export type ResolvableParameter
+export type BasicResolvableParameter
   = StringConstructor | StringConstructor[]
     | NumberConstructor | NumberConstructor[]
     | BooleanConstructor | BooleanConstructor[]
@@ -12,8 +12,8 @@ export type ResolvableParameter
 /**
  * @name _ResolveParameterType
  * @private
- * @description Utility type to map a {@link ResolvableParameter}
- * into its corresponding TypeScript primitive type.
+ * @description Utility type to map a {@link BasicResolvableParameter}
+ * into its corresponding TypeScript type.
  *
  * - `StringConstructor` → `string`
  * - `NumberConstructor` → `number`
@@ -22,7 +22,7 @@ export type ResolvableParameter
  * - `NumberConstructor[]` → `number[]`
  * - `BooleanConstructor[]` → `boolean[]`
  */
-export type _ResolveParameterType<T extends ResolvableParameter>
+export type _ResolveParameterType<T extends BasicResolvableParameter>
   = T extends StringConstructor ? string
     : T extends NumberConstructor ? number
       : T extends BooleanConstructor ? boolean
@@ -37,7 +37,7 @@ export type _ResolveParameterType<T extends ResolvableParameter>
  * @description Base option shared by both flag and argument definitions.
  * Provides core metadata about the parameter and its type resolution.
  */
-export type _ParserBaseOption<T extends ResolvableParameter> = {
+export type _ParserBaseOption<T extends BasicResolvableParameter> = {
   /**
    * The constructor used to resolve the parameter.
    * Determines the runtime type (see {@link _ResolveParameterType}).
@@ -79,8 +79,8 @@ export type _ParserBaseOption<T extends ResolvableParameter> = {
  * Unlike flags, arguments cannot have aliases.
  */
 export type ParserArgumentOption
-  = ResolvableParameter extends infer T ? (
-    T extends ResolvableParameter ? _ParserBaseOption<T> : never
+  = BasicResolvableParameter extends infer T ? (
+    T extends BasicResolvableParameter ? _ParserBaseOption<T> : never
   ) : never
 
 /**
@@ -89,8 +89,8 @@ export type ParserArgumentOption
  * Flags support aliases in addition to the base option fields.
  */
 export type ParserFlagOption
-  = ResolvableParameter extends infer T ? (
-    T extends ResolvableParameter ? _ParserBaseOption<T> & {
+  = BasicResolvableParameter extends infer T ? (
+    T extends BasicResolvableParameter ? _ParserBaseOption<T> & {
       /**
        * One or more alternative names for the flag.
        * - A single string (e.g. `"v"`).
