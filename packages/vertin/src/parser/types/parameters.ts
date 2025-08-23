@@ -46,9 +46,12 @@ export type Resolver = CtorResolver | CtorResolver[] | FnResolver | FnResolver[]
  * @private
  */
 export type _ResolveUnit<T>
-  = T extends abstract new (...args: any[]) => infer RT ? RT
-    : T extends (...args: any[]) => infer U ? U
-      : never
+  = T extends StringConstructor ? string
+    : T extends NumberConstructor ? number
+      : T extends BooleanConstructor ? boolean
+        : T extends abstract new (...args: any[]) => infer RT ? RT
+          : T extends (...args: any[]) => infer U ? U
+            : never
 
 /**
  * A utility that resolves a `Resolver` type to its final output type.
@@ -171,19 +174,8 @@ export type _FlagParameterOption<T extends _AnyProps<FlagParameterOption, 'defau
 export type _ParsedParameter<
   T extends Record<string, _BaseParameterOption<any>>,
 > = {
-  // Required keys: required:true or default exists
-  [K in keyof T as T[K]['required'] extends true
-    ? K
-    : T[K]['default'] extends undefined
-      ? never
-      : K
-  ]: _Resolve<T[K]['resolver']>
-} & {
-  // Optional keys: required:false/omitted and no default
-  [K in keyof T as T[K]['required'] extends true
-    ? never
-    : T[K]['default'] extends undefined
-      ? K
-      : never
-  ]?: _Resolve<T[K]['resolver']>
+  [K in keyof T]:
+  'default' extends keyof T[K] ? _Resolve<T[K]['resolver']>
+    : T[K]['required'] extends true ? _Resolve<T[K]['resolver']>
+      : _Resolve<T[K]['resolver']> | undefined
 }
