@@ -2,6 +2,13 @@ import type { _ParserState } from './state'
 import type { _Resolve, Resolver } from './types/parameters'
 
 /**
+ * Checks if a resolver is a built-in constructor that should be called as a function.
+ */
+function isBuiltInConstructor(resolver: any): boolean {
+  return resolver === String || resolver === Number || resolver === Boolean
+}
+
+/**
  * Resolves a string value using the specified resolver.
  *
  * @param value - The string value to resolve
@@ -16,8 +23,12 @@ export function resolveValue<T extends Resolver>(value: string, resolver: T): _R
         // function resolver - direct call
         return (r as (...args: any[]) => any)(acc)
       }
+      else if (isBuiltInConstructor(r)) {
+        // built-in constructors - call as functions to get primitives
+        return (r as any)(acc)
+      }
       else {
-        // constructor resolver - instantiate with new
+        // custom constructor resolver - instantiate with new
         return new (r as any)(acc)
       }
     }, value) as _Resolve<T>
@@ -26,8 +37,12 @@ export function resolveValue<T extends Resolver>(value: string, resolver: T): _R
     // function resolver - direct call
     return (resolver as (...args: any[]) => any)(value) as _Resolve<T>
   }
+  else if (isBuiltInConstructor(resolver)) {
+    // built-in constructors - call as functions to get primitives
+    return (resolver as any)(value) as _Resolve<T>
+  }
   else {
-    // constructor resolver - instantiate with new
+    // custom constructor resolver - instantiate with new
     return new (resolver as any)(value) as _Resolve<T>
   }
 }

@@ -3,6 +3,7 @@ node_modules
 
 # development
 dist
+coverage
 
 # os related
 .DS_Store

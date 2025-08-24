@@ -33,6 +33,11 @@ function _parse<T extends ParserOption>(
 ): _Parsed<T> {
   let state = createInitialState(context)
 
+  // skip the first two elements (node executable and script name) for CLI compatibility
+  // this matches the standard behavior of process.argv
+  const startIndex = Math.min(2, argv.length)
+  state.currentIndex = startIndex
+
   // process each token sequentially, routing to appropriate parser
   while (state.currentIndex < argv.length) {
     const token = argv[state.currentIndex]
