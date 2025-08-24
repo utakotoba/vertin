@@ -63,6 +63,7 @@
     "markdown",
     "json",
     "jsonc",
+    "yml",
     "yaml"
   ],
   // workspace dictionary
