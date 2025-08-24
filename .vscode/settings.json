@@ -62,7 +62,8 @@
     "typescript",
     "markdown",
     "json",
-    "jsonc"
+    "jsonc",
+    "yaml"
   ],
   // workspace dictionary
   "cSpell.words": [
