@@ -1,6 +1,7 @@
 {
   "name": "@vertin/monorepo",
   "private": true,
+  "packageManager": "bun@1.2.20",
   "author": "Akiyama Kohane <echo.aimless@gmail.com>",
   "workspaces": [
     "packages/*"
