@@ -1,7 +1,4 @@
 name: TypeScript Type Check
-run-name: |
-  Type Check for `${{ github.ref_name }}`
-  ${{ github.event_name == 'pull_request' && format('PR: {}', github.event.pull_request.number) }}
 
 on:
   push:
