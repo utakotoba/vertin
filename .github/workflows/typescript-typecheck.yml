@@ -5,7 +5,15 @@ on:
     branches:
       - main
       - dev
+    paths:
+      - '**/*.ts'
+      - '**/*.d.ts'
+      - '**/tsconfig.json'
   pull_request:
+    paths:
+      - '**/*.ts'
+      - '**/*.d.ts'
+      - '**/tsconfig.json'
 
 jobs:
   typecheck:
