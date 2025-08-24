@@ -25,7 +25,7 @@ jobs:
           set -e
           for pkg in packages/*; do
             if [ -f "$pkg/tsconfig.json" ]; then
-              echo "Type checking for `$pkg...`"
+              echo "Type checking for $pkg..."
               bun tsc --noEmit -p "$pkg"
             fi
           done
