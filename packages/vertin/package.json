@@ -12,6 +12,9 @@
     "directory": "packages/vertin"
   },
   "keywords": ["cli", "args"],
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -24,6 +27,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rolldown -c rolldown.config.ts"
+    "build": "rolldown -c rolldown.config.ts",
+    "prepack": "bun run build"
   }
 }
