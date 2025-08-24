@@ -49,19 +49,3 @@ function _parse<T extends ParserOption>(
 
   return state.result as _Parsed<T>
 }
-
-// demo
-// const time = performance.now()
-// for (let i = 0; i < 10000000; i++) {
-//     const parser = createParser({
-//         arguments: {
-//             input: { resolver: String, required: true },
-//             count: { resolver: Number, default: 1 },
-//         },
-//         flags: {
-//             verbose: { resolver: Boolean, default: false },
-//         },
-//     })
-//     const result = parser('--verbose file.txt 10'.split(' '))
-// }
-// console.log((performance.now() - time) / 10000000 + 'ms per parse')

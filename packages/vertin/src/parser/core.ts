@@ -39,7 +39,9 @@ export function resolveValue<T extends Resolver>(value: string, resolver: T): _R
  * @returns The flag name without dashes
  */
 export function extractFlagName(token: string): string {
-  return token.startsWith('--') ? token.slice(2) : token.slice(1)
+  return token.charCodeAt(0) === 45 && token.charCodeAt(1) === 45
+    ? token.substring(2)
+    : token.substring(1)
 }
 
 /**
