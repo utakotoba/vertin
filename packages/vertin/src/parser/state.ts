@@ -4,29 +4,24 @@ import type { _ParserContext } from './context'
  * Internal state for tracking parsing progress and intermediate data.
  */
 export interface _ParserState {
-  // Current position in argv array
+  // current position in argv array being processed
   currentIndex: number
 
-  // Current argument index (position in defined arguments)
+  // current argument index (position in defined arguments)
   currentArgIndex: number
 
-  // Accumulated parsing results.
-  // The type `any` is used here because the resolver has not yet been applied.
-  // This is safe, as the values will be cast to the correct types later.
+  // accumulated parsing results with resolved values
   result: {
     arguments: Record<string, any>
     flags: Record<string, any>
   }
 
-  // Parser context (created from parser options)
+  // parser context with pre-processed lookup maps
   context: _ParserContext
 }
 
 /**
- * Creates an initial parser state.
- *
- * @param context - The pre-processed parser context
- * @returns Initial parser state with default values
+ * Creates an initial parser state with default values from context.
  */
 export function createInitialState(context: _ParserContext): _ParserState {
   const result: {
@@ -37,12 +32,12 @@ export function createInitialState(context: _ParserContext): _ParserState {
     flags: {},
   }
 
-  // Initialize flags with default values using the pre-computed map
+  // initialize flags with default values using pre-computed lookup maps
   context.flagDefaults.forEach((defaultValue, name) => {
     result.flags[name] = defaultValue
   })
 
-  // Initialize arguments with default values using the pre-computed map
+  // initialize arguments with default values using pre-computed lookup maps
   context.argumentDefaults.forEach((defaultValue, name) => {
     result.arguments[name] = defaultValue
   })

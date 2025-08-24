@@ -1,34 +1,31 @@
 import type { ParserOption } from './types/options'
 
 /**
- * _ParserContext holds the pre-processed parser options and lookup maps.
+ * Pre-processed parser context with optimized lookup maps for fast parsing.
  */
 export interface _ParserContext {
   /** The original parser configuration options. */
   options: ParserOption
 
   /**
-   * A map from flag aliases (including the main flag name and all its aliases)
-   * to the canonical flag name, for fast O(1) lookup during parsing.
+   * Fast O(1) lookup from flag aliases to canonical flag names.
+   * Includes both main names and all aliases for each flag.
    */
   flagLookup: Map<string, string>
 
   /**
-   * A map from flag names to their default values, for fast O(1) lookup during initialization.
+   * Fast O(1) lookup for flag default values during state initialization.
    */
   flagDefaults: Map<string, any>
 
   /**
-   * A map from argument names to their default values, for fast O(1) lookup during initialization.
+   * Fast O(1) lookup for argument default values during state initialization.
    */
   argumentDefaults: Map<string, any>
 }
 
 /**
- * Creates a parser context from parser options.
- *
- * @param options - The parser configuration options
- * @returns _ParserContext with alias mapping
+ * Creates a pre-processed parser context with optimized lookup maps.
  */
 export function createParserContext(options: ParserOption): _ParserContext {
   const flagLookup = new Map<string, string>()
@@ -38,18 +35,19 @@ export function createParserContext(options: ParserOption): _ParserContext {
   // process flags: create alias lookup and default value maps
   if (options.flags) {
     Object.entries(options.flags).forEach(([name, flagOpt]) => {
-      // create alias lookup
+      // build alias list including main name and all aliases
       const aliases = [name]
       if (flagOpt.alias) {
         const aliasArray = Array.isArray(flagOpt.alias) ? flagOpt.alias : [flagOpt.alias]
         aliases.push(...aliasArray)
       }
 
+      // map all aliases to the canonical flag name for O(1) lookup
       aliases.forEach((alias) => {
         flagLookup.set(alias, name)
       })
 
-      // create default value lookup
+      // store default values for fast initialization
       if (flagOpt.default !== undefined) {
         flagDefaults.set(name, flagOpt.default)
       }
@@ -62,6 +60,7 @@ export function createParserContext(options: ParserOption): _ParserContext {
   // process arguments: create default value maps
   if (options.arguments) {
     Object.entries(options.arguments).forEach(([name, argOpt]) => {
+      // store default values for fast initialization
       if (argOpt.default !== undefined) {
         argumentDefaults.set(name, argOpt.default)
       }

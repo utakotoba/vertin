@@ -25,7 +25,7 @@ export function createParser<T extends ParserOption>(options: T): Parser<T> {
 }
 
 /**
- * Core parsing logic that processes the argv array according to the parser context.
+ * Core parsing logic that processes argv tokens sequentially.
  */
 function _parse<T extends ParserOption>(
   argv: string[],
@@ -33,6 +33,7 @@ function _parse<T extends ParserOption>(
 ): _Parsed<T> {
   let state = createInitialState(context)
 
+  // process each token sequentially, routing to appropriate parser
   while (state.currentIndex < argv.length) {
     const token = argv[state.currentIndex]
 
@@ -44,7 +45,7 @@ function _parse<T extends ParserOption>(
     }
   }
 
-  // validate required parameters
+  // validate all required parameters are present
   validateRequiredParameters(state)
 
   return state.result as _Parsed<T>
