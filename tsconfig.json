@@ -20,6 +20,7 @@
   "exclude": [
     "node_modules",
     "eslint.config.ts",
+    "**/dist",
     "**/vitest.config.ts",
     "**/rolldown.config.ts"
   ]
