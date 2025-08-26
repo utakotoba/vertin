@@ -252,8 +252,35 @@ describe('parseFlag', () => {
 
     const result = parseFlag(state, argv)
 
-    expect(result.result.flags.unknown).toBe(true)
+    expect(result.result.flags.unknown).toBeUndefined()
+    expect(result.result.__unknownFlags__?.unknown).toBe('--unknown')
     expect(result.currentIndex).toBe(1)
+  })
+
+  it('should include multiple unknown flags with include strategy', () => {
+    const options: ParserOption = {
+      resolveUnknown: 'include',
+      flags: {
+        known: { resolver: Boolean },
+      },
+    }
+    const context = createParserContext(options)
+    const state = createInitialState(context)
+    const argv = ['--unknown1', '--unknown2', '--known']
+
+    let result = parseFlag(state, argv)
+    expect(result.result.flags.unknown1).toBeUndefined()
+    expect(result.result.__unknownFlags__?.unknown1).toBe('--unknown1')
+    expect(result.currentIndex).toBe(1)
+
+    result = parseFlag(result, argv)
+    expect(result.result.flags.unknown2).toBeUndefined()
+    expect(result.result.__unknownFlags__?.unknown2).toBe('--unknown2')
+    expect(result.currentIndex).toBe(2)
+
+    result = parseFlag(result, argv)
+    expect(result.result.flags.known).toBe(true)
+    expect(result.currentIndex).toBe(3)
   })
 
   it('should ignore unknown flag with ignore strategy', () => {

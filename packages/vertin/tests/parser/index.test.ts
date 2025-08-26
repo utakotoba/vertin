@@ -168,8 +168,30 @@ describe('createParser', () => {
     const result = parser(argv)
 
     expect(result.flags).toEqual({
-      unknown: true,
       known: true,
+    })
+    expect(result.__unknownFlags__).toEqual({
+      unknown: '--unknown',
+    })
+  })
+
+  it('should handle multiple unknown flags with include strategy', () => {
+    const options: ParserOption = {
+      resolveUnknown: 'include',
+      flags: {
+        known: { resolver: Boolean },
+      },
+    }
+    const parser = createParser(options)
+    const argv = ['node', 'script.js', '--unknown1', '--unknown2', '--known']
+    const result = parser(argv)
+
+    expect(result.flags).toEqual({
+      known: true,
+    })
+    expect(result.__unknownFlags__).toEqual({
+      unknown1: '--unknown1',
+      unknown2: '--unknown2',
     })
   })
 

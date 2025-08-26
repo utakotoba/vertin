@@ -25,6 +25,8 @@ export interface _Parsed<
   flags: F extends undefined ? never
     : _KeyCount<NonNullable<F>> extends 0 ? never
       : _ParsedParameter<NonNullable<F>>
+
+  __unknownFlags__?: Record<string, string>
 }
 
 /**
@@ -38,26 +40,3 @@ export interface _Parsed<
  */
 export type Parser<T extends ParserOption = ParserOption>
   = (argv: string[]) => _Parsed<T>
-
-// demo
-// export function createParser<const T extends ParserOption>(
-//   _options: T & {
-//     readonly arguments?: {
-//       [K in keyof T['arguments']]: NonNullable<T['arguments'][K]> & {
-//         readonly default?: _Resolve<NonNullable<T['arguments']>[K]['resolver']>
-//       }
-//     }
-//     readonly flags?: {
-//       [K in keyof T['flags']]: NonNullable<T['flags'][K]> & {
-//         readonly default?: _Resolve<NonNullable<T['flags']>[K]['resolver']>
-//       }
-//     }
-//   },
-// ): Parser<T> {
-//   return (_argv: string[]) => {
-//     return {
-//       arguments: {},
-//       flags: {},
-//     } as _Parsed<T>
-//   }
-// }

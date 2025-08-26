@@ -84,7 +84,10 @@ export function parseFlag(state: _ParserState, argv: string[]): _ParserState {
     }
     else if (context.options.resolveUnknown === 'include') {
       // store unknown flag as-is for later processing
-      state.result.flags[flagName] = true
+      if (!state.result.__unknownFlags__) {
+        state.result.__unknownFlags__ = {}
+      }
+      state.result.__unknownFlags__[flagName] = token
     }
     // 'ignore' strategy - skip unknown flag and continue
     state.currentIndex += 1
