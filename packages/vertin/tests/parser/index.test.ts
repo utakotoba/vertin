@@ -298,6 +298,108 @@ describe('createParser', () => {
     })
   })
 
+  it('should allow flags after arguments when resolveFlagAfterArgument is true (default)', () => {
+    const options: ParserOption = {
+      resolveFlagAfterArgument: true,
+      flags: {
+        verbose: { resolver: Boolean },
+        help: { resolver: Boolean },
+      },
+      arguments: {
+        input: { resolver: String },
+      },
+    }
+    const parser = createParser(options)
+    const argv = ['node', 'script.js', 'input.txt', '--verbose', '--help']
+    const result = parser(argv)
+
+    expect(result.flags).toEqual({
+      verbose: true,
+      help: true,
+    })
+    expect(result.arguments).toEqual({
+      input: 'input.txt',
+    })
+  })
+
+  it('should block flags after arguments when resolveFlagAfterArgument is false and resolveUnknown is block', () => {
+    const options: ParserOption = {
+      resolveFlagAfterArgument: false,
+      resolveUnknown: 'block',
+      flags: {
+        verbose: { resolver: Boolean },
+        help: { resolver: Boolean },
+      },
+      arguments: {
+        input: { resolver: String },
+      },
+    }
+    const parser = createParser(options)
+    const argv = ['node', 'script.js', 'input.txt', '--verbose']
+
+    expect(() => parser(argv)).toThrow('Flag --verbose cannot appear after arguments')
+  })
+
+  it('should block flags after arguments when resolveFlagAfterArgument is false regardless of resolveUnknown setting', () => {
+    const options: ParserOption = {
+      resolveFlagAfterArgument: false,
+      resolveUnknown: 'include', // even with include, should still block
+      flags: {
+        verbose: { resolver: Boolean },
+        help: { resolver: Boolean },
+      },
+      arguments: {
+        input: { resolver: String },
+      },
+    }
+    const parser = createParser(options)
+    const argv = ['node', 'script.js', 'input.txt', '--verbose']
+
+    expect(() => parser(argv)).toThrow('Flag --verbose cannot appear after arguments')
+  })
+
+  it('should block flags after arguments when resolveFlagAfterArgument is false and resolveUnknown is ignore', () => {
+    const options: ParserOption = {
+      resolveFlagAfterArgument: false,
+      resolveUnknown: 'ignore', // even with ignore, should still block
+      flags: {
+        verbose: { resolver: Boolean },
+        help: { resolver: Boolean },
+      },
+      arguments: {
+        input: { resolver: String },
+      },
+    }
+    const parser = createParser(options)
+    const argv = ['node', 'script.js', 'input.txt', '--verbose']
+
+    expect(() => parser(argv)).toThrow('Flag --verbose cannot appear after arguments')
+  })
+
+  it('should allow flags before arguments when resolveFlagAfterArgument is false', () => {
+    const options: ParserOption = {
+      resolveFlagAfterArgument: false,
+      flags: {
+        verbose: { resolver: Boolean },
+        help: { resolver: Boolean },
+      },
+      arguments: {
+        input: { resolver: String },
+      },
+    }
+    const parser = createParser(options)
+    const argv = ['node', 'script.js', '--verbose', '--help', 'input.txt']
+    const result = parser(argv)
+
+    expect(result.flags).toEqual({
+      verbose: true,
+      help: true,
+    })
+    expect(result.arguments).toEqual({
+      input: 'input.txt',
+    })
+  })
+
   it('should throw error for excess arguments with block strategy', () => {
     const options: ParserOption = {
       resolveUnknown: 'block',

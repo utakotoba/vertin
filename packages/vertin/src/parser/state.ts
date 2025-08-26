@@ -29,13 +29,13 @@ export function createInitialState(context: _ParserContext): _ParserState {
   const result: {
     arguments: Record<string, any>
     flags: Record<string, any>
-    __unknownFlags__?: Record<string, string>
     __unknownArguments__?: string[]
+    __unknownFlags__?: Record<string, string>
   } = {
     arguments: {},
     flags: {},
-    __unknownFlags__: {},
     __unknownArguments__: [],
+    __unknownFlags__: {},
   }
 
   // initialize flags with default values using pre-computed lookup maps

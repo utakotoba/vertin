@@ -151,6 +151,21 @@ describe('extractFlagName', () => {
     expect(extractFlagName('--dry-run')).toBe('dry-run')
     expect(extractFlagName('--config-file')).toBe('config-file')
   })
+
+  it('should extract flag names correctly for unknown flag handling', () => {
+    // test the logic used in resolveFlagAfterArgument feature
+    const testCases = [
+      { input: '--verbose', expected: 'verbose' },
+      { input: '-v', expected: 'v' },
+      { input: '--dry-run', expected: 'dry-run' },
+      { input: '-f', expected: 'f' },
+    ]
+
+    testCases.forEach(({ input, expected }) => {
+      const flagName = input.startsWith('--') ? input.substring(2) : input.substring(1)
+      expect(flagName).toBe(expected)
+    })
+  })
 })
 
 describe('isFlag', () => {

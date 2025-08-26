@@ -38,14 +38,25 @@ function _parse<T extends ParserOption>(
   const startIndex = Math.min(2, argv.length)
   state.currentIndex = startIndex
 
+  let hasEncounteredArguments = false
+
   // process each token sequentially, routing to appropriate parser
   while (state.currentIndex < argv.length) {
     const token = argv[state.currentIndex]
 
     if (isFlag(token)) {
-      state = parseFlag(state, argv)
+      // check if flags are allowed after arguments
+      if (!hasEncounteredArguments || context.options.resolveFlagAfterArgument !== false) {
+        state = parseFlag(state, argv)
+      }
+      else {
+        // flags not allowed after arguments - always block
+        throw new Error(`Flag ${token} cannot appear after arguments`)
+      }
     }
     else {
+      // mark that we've encountered an argument
+      hasEncounteredArguments = true
       state = parseArgument(state, argv)
     }
   }

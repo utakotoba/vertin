@@ -24,10 +24,10 @@ export interface ParserOption {
   /**
    * Whether a to resolve flags after arguments.
    *
-   * Flags must be specified before any argument if enabled,
-   * otherwise it will be blocked.
+   * Flags must be specified before any argument if disabled,
+   * otherwise the position of the flag is unrestricted.
    *
-   * @default false
+   * @default true
    */
   readonly resolveFlagAfterArgument?: boolean
 
