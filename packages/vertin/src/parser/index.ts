@@ -66,3 +66,9 @@ function _parse<T extends ParserOption>(
 
   return state.result as _Parsed<T>
 }
+
+// re-export
+export * from './context'
+export * from './core'
+export * from './state'
+export * from './types'

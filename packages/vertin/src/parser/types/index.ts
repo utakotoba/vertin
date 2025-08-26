@@ -41,3 +41,7 @@ export interface _Parsed<
  */
 export type Parser<T extends ParserOption = ParserOption>
   = (argv: string[]) => _Parsed<T>
+
+// re-export types
+export * from './options'
+export * from './parameters'
