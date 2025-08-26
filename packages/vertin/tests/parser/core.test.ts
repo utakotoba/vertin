@@ -225,6 +225,78 @@ describe('parseFlag', () => {
     expect(result.currentIndex).toBe(2)
   })
 
+  it('should not resolve flag aliases when resolveAlias is false', () => {
+    const options: ParserOption = {
+      resolveAlias: false,
+      flags: {
+        verbose: { resolver: Boolean, alias: 'v' },
+        help: { resolver: Boolean, alias: ['h', 'H'] },
+      },
+    }
+    const context = createParserContext(options)
+    const state = createInitialState(context)
+    const argv = ['-v', '-h']
+
+    let result = parseFlag(state, argv)
+    // alias should not be resolved, so -v should be treated as unknown flag
+    expect(result.result.flags.verbose).toBeUndefined()
+    expect(result.currentIndex).toBe(1)
+
+    result = parseFlag(result, argv)
+    // alias should not be resolved, so -h should be treated as unknown flag
+    expect(result.result.flags.help).toBeUndefined()
+    expect(result.currentIndex).toBe(2)
+  })
+
+  it('should still resolve main flag names when resolveAlias is false', () => {
+    const options: ParserOption = {
+      resolveAlias: false,
+      flags: {
+        verbose: { resolver: Boolean, alias: 'v' },
+        help: { resolver: Boolean, alias: ['h', 'H'] },
+      },
+    }
+    const context = createParserContext(options)
+    const state = createInitialState(context)
+    const argv = ['--verbose', '--help']
+
+    let result = parseFlag(state, argv)
+    expect(result.result.flags.verbose).toBe(true)
+    expect(result.currentIndex).toBe(1)
+
+    result = parseFlag(result, argv)
+    expect(result.result.flags.help).toBe(true)
+    expect(result.currentIndex).toBe(2)
+  })
+
+  it('should capture flag aliases as unknown flags when resolveAlias is false and resolveUnknown is include', () => {
+    const options: ParserOption = {
+      resolveAlias: false,
+      resolveUnknown: 'include',
+      flags: {
+        verbose: { resolver: Boolean, alias: 'v' },
+        help: { resolver: Boolean, alias: ['h', 'H'] },
+      },
+    }
+    const context = createParserContext(options)
+    const state = createInitialState(context)
+    const argv = ['-v', '-h', '--verbose']
+
+    let result = parseFlag(state, argv)
+    expect(result.result.flags.verbose).toBeUndefined()
+    expect(result.result.__unknownFlags__?.v).toBe('-v')
+    expect(result.currentIndex).toBe(1)
+
+    result = parseFlag(result, argv)
+    expect(result.result.flags.help).toBeUndefined()
+    expect(result.result.__unknownFlags__?.h).toBe('-h')
+    expect(result.currentIndex).toBe(2)
+
+    result = parseFlag(result, argv)
+    expect(result.result.flags.verbose).toBe(true)
+    expect(result.currentIndex).toBe(3)
+  })
+
   it('should throw error for unknown flag with block strategy', () => {
     const options: ParserOption = {
       resolveUnknown: 'block',

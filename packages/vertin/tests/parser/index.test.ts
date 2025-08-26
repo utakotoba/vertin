@@ -258,6 +258,46 @@ describe('createParser', () => {
     expect(result.__unknownArguments__).toEqual(['excess1.txt', 'excess2.txt', 'excess3.txt'])
   })
 
+  it('should not resolve flag aliases when resolveAlias is false', () => {
+    const options: ParserOption = {
+      resolveAlias: false,
+      resolveUnknown: 'include',
+      flags: {
+        verbose: { resolver: Boolean, alias: 'v' },
+        help: { resolver: Boolean, alias: ['h', 'H'] },
+      },
+    }
+    const parser = createParser(options)
+    const argv = ['node', 'script.js', '-v', '-h', '--verbose']
+    const result = parser(argv)
+
+    expect(result.flags).toEqual({
+      verbose: true,
+    })
+    expect(result.__unknownFlags__).toEqual({
+      v: '-v',
+      h: '-h',
+    })
+  })
+
+  it('should resolve flag aliases when resolveAlias is true (default)', () => {
+    const options: ParserOption = {
+      resolveAlias: true,
+      flags: {
+        verbose: { resolver: Boolean, alias: 'v' },
+        help: { resolver: Boolean, alias: ['h', 'H'] },
+      },
+    }
+    const parser = createParser(options)
+    const argv = ['node', 'script.js', '-v', '-h']
+    const result = parser(argv)
+
+    expect(result.flags).toEqual({
+      verbose: true,
+      help: true,
+    })
+  })
+
   it('should throw error for excess arguments with block strategy', () => {
     const options: ParserOption = {
       resolveUnknown: 'block',

@@ -37,7 +37,7 @@ export function createParserContext(options: ParserOption): _ParserContext {
     Object.entries(options.flags).forEach(([name, flagOpt]) => {
       // build alias list including main name and all aliases
       const aliases = [name]
-      if (flagOpt.alias) {
+      if (flagOpt.alias && options.resolveAlias !== false) {
         const aliasArray = Array.isArray(flagOpt.alias) ? flagOpt.alias : [flagOpt.alias]
         aliases.push(...aliasArray)
       }
