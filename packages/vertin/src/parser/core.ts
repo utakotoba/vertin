@@ -136,7 +136,12 @@ export function parseArgument(state: _ParserState, argv: string[]): _ParserState
       throw new Error(`Unexpected argument: ${token}`)
     }
     else if (context.options.resolveUnknown === 'include') {
-      // TODO: implement rest argument collection
+      // store unknown argument in __unknownArguments__ array
+      if (!state.result.__unknownArguments__) {
+        state.result.__unknownArguments__ = []
+      }
+      const token = argv[state.currentIndex]
+      state.result.__unknownArguments__.push(token)
     }
     // 'ignore' strategy - skip excess arguments and continue
     state.currentIndex += 1

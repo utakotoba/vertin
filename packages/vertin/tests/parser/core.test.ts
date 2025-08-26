@@ -283,6 +283,25 @@ describe('parseFlag', () => {
     expect(result.currentIndex).toBe(3)
   })
 
+  it('should initialize __unknownFlags__ when it does not exist', () => {
+    const options: ParserOption = {
+      resolveUnknown: 'include',
+      flags: {
+        known: { resolver: Boolean },
+      },
+    }
+    const context = createParserContext(options)
+    const state = createInitialState(context)
+    // manually remove __unknownFlags__ to test initialization (edge case)
+    delete state.result.__unknownFlags__
+    const argv = ['--unknown']
+
+    const result = parseFlag(state, argv)
+
+    expect(result.result.__unknownFlags__).toBeDefined()
+    expect(result.result.__unknownFlags__?.unknown).toBe('--unknown')
+  })
+
   it('should ignore unknown flag with ignore strategy', () => {
     const options: ParserOption = {
       resolveUnknown: 'ignore',
@@ -435,6 +454,27 @@ describe('parseArgument', () => {
     expect(result.currentArgIndex).toBe(1) // still 1 because we're ignoring excess
   })
 
+  it('should initialize __unknownArguments__ when it does not exist', () => {
+    const options: ParserOption = {
+      resolveUnknown: 'include',
+      arguments: {
+        input: { resolver: String },
+      },
+    }
+    const context = createParserContext(options)
+    const state = createInitialState(context)
+    // manually remove __unknownArguments__ to test initialization
+    delete state.result.__unknownArguments__
+    const argv = ['file.txt', 'excess.txt']
+
+    let result = parseArgument(state, argv)
+    expect(result.result.arguments.input).toBe('file.txt')
+
+    result = parseArgument(result, argv)
+    expect(result.result.__unknownArguments__).toBeDefined()
+    expect(result.result.__unknownArguments__).toEqual(['excess.txt'])
+  })
+
   it('should handle partial count collection', () => {
     const options: ParserOption = {
       arguments: {
@@ -488,6 +528,38 @@ describe('parseArgument', () => {
     result = parseArgument(result, argv)
     expect(result.currentIndex).toBe(2)
     expect(result.currentArgIndex).toBe(1) // still 1 because we're including excess
+    expect(result.result.__unknownArguments__).toEqual(['excess.txt'])
+  })
+
+  it('should handle multiple excess arguments with include strategy', () => {
+    const options: ParserOption = {
+      resolveUnknown: 'include',
+      arguments: {
+        input: { resolver: String },
+      },
+    }
+    const context = createParserContext(options)
+    const state = createInitialState(context)
+    const argv = ['file.txt', 'excess1.txt', 'excess2.txt', 'excess3.txt']
+
+    let result = parseArgument(state, argv)
+    expect(result.result.arguments.input).toBe('file.txt')
+    expect(result.currentIndex).toBe(1)
+    expect(result.currentArgIndex).toBe(1)
+
+    result = parseArgument(result, argv)
+    expect(result.currentIndex).toBe(2)
+    expect(result.currentArgIndex).toBe(1)
+
+    result = parseArgument(result, argv)
+    expect(result.currentIndex).toBe(3)
+    expect(result.currentArgIndex).toBe(1)
+
+    result = parseArgument(result, argv)
+    expect(result.currentIndex).toBe(4)
+    expect(result.currentArgIndex).toBe(1)
+
+    expect(result.result.__unknownArguments__).toEqual(['excess1.txt', 'excess2.txt', 'excess3.txt'])
   })
 })
 

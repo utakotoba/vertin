@@ -15,6 +15,7 @@ export interface _ParserState {
     arguments: Record<string, any>
     flags: Record<string, any>
     __unknownFlags__?: Record<string, string>
+    __unknownArguments__?: string[]
   }
 
   // parser context with pre-processed lookup maps
@@ -29,10 +30,12 @@ export function createInitialState(context: _ParserContext): _ParserState {
     arguments: Record<string, any>
     flags: Record<string, any>
     __unknownFlags__?: Record<string, string>
+    __unknownArguments__?: string[]
   } = {
     arguments: {},
     flags: {},
     __unknownFlags__: {},
+    __unknownArguments__: [],
   }
 
   // initialize flags with default values using pre-computed lookup maps

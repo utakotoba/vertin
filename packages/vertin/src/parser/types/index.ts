@@ -27,6 +27,7 @@ export interface _Parsed<
       : _ParsedParameter<NonNullable<F>>
 
   __unknownFlags__?: Record<string, string>
+  __unknownArguments__?: string[]
 }
 
 /**

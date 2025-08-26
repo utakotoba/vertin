@@ -224,6 +224,40 @@ describe('createParser', () => {
     })
   })
 
+  it('should handle excess arguments with include strategy', () => {
+    const options: ParserOption = {
+      resolveUnknown: 'include',
+      arguments: {
+        input: { resolver: String },
+      },
+    }
+    const parser = createParser(options)
+    const argv = ['node', 'script.js', 'input.txt', 'excess.txt']
+    const result = parser(argv)
+
+    expect(result.arguments).toEqual({
+      input: 'input.txt',
+    })
+    expect(result.__unknownArguments__).toEqual(['excess.txt'])
+  })
+
+  it('should handle multiple excess arguments with include strategy', () => {
+    const options: ParserOption = {
+      resolveUnknown: 'include',
+      arguments: {
+        input: { resolver: String },
+      },
+    }
+    const parser = createParser(options)
+    const argv = ['node', 'script.js', 'input.txt', 'excess1.txt', 'excess2.txt', 'excess3.txt']
+    const result = parser(argv)
+
+    expect(result.arguments).toEqual({
+      input: 'input.txt',
+    })
+    expect(result.__unknownArguments__).toEqual(['excess1.txt', 'excess2.txt', 'excess3.txt'])
+  })
+
   it('should throw error for excess arguments with block strategy', () => {
     const options: ParserOption = {
       resolveUnknown: 'block',
