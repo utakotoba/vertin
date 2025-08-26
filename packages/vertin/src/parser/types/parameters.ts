@@ -175,7 +175,7 @@ export type _ParsedParameter<
   T extends Record<string, _BaseParameterOption<any>>,
 > = {
   [K in keyof T]:
-  'default' extends keyof T[K] ? _Resolve<T[K]['resolver']>
+  T[K]['default'] extends _Resolve<T[K]['resolver']> ? _Resolve<T[K]['resolver']>
     : T[K]['required'] extends true ? _Resolve<T[K]['resolver']>
       : _Resolve<T[K]['resolver']> | undefined
 }
