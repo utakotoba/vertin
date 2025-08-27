@@ -77,6 +77,39 @@ export interface CommandOption {
 }
 
 /**
+ * User-side option definition for a command.
+ *
+ * Control how root command is executed and what parameters it accepts.
+ *
+ * Unlike {@link CommandOption}, this type does not include name and version metadata and
+ * subcommand option, since the root command should inherit those metadata from app option.
+ */
+export interface RootCommandOption {
+  /**
+   * The description of the command.
+   *
+   * This will be used as the command's description throughout the app.
+   *
+   * It must be a non-empty string to ensure a better user experience.
+   */
+  readonly description: string
+
+  /**
+   * The arguments of the command.
+   *
+   * This will be used to parse the command's arguments.
+   */
+  readonly arguments?: Record<string, ArgumentParameterOption>
+
+  /**
+   * The flags of the command.
+   *
+   * This will be used to parse the command's flags.
+   */
+  readonly flags?: Record<string, FlagParameterOption>
+}
+
+/**
  * The execution context of a command, used in user code.
  *
  * This will provide the typed parsed arguments and flags,
