@@ -1,7 +1,10 @@
 import type { AppOption, AppRunner } from './types/app'
+import { validateAppOption } from './validator'
 
 export function createRuntime(
-  _option: AppOption,
+  option: AppOption,
 ): AppRunner {
+  validateAppOption(option)
+
   return async (_argv?: string[]) => {}
 }
