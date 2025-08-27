@@ -39,7 +39,7 @@ jobs:
           cd packages/vertin
           bunx npm publish --provenance
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_CONFIG_TOKEN }}
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/v')
