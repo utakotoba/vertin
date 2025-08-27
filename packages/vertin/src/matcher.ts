@@ -27,7 +27,6 @@ export function DFSMatch(
   index: number,
   path: string[],
 ): CommandMatchState {
-  // early exit if we've processed all arguments
   if (index >= argv.length) {
     return {
       command: undefined,
@@ -89,7 +88,6 @@ export function matchCommands(
   rootCommand?: Command,
   startIndex: number = 2,
 ): CommandMatchState {
-  // validate that we have commands to work with
   if (topLevelCommands.length === 0 && !rootCommand) {
     throw new Error('No commands available for matching')
   }

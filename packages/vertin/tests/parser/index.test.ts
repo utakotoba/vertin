@@ -715,8 +715,6 @@ describe('createParser', () => {
       },
     }
     const parser = createParser(options)
-    // this test covers the case where flagLookup returns a name but flags object doesn't have it
-    // we need to test this by creating a scenario where the flag name exists in lookup but not in options
     const argv = ['--verbose']
     const result = parser(argv)
 
