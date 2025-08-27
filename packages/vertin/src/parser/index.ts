@@ -63,7 +63,6 @@ function _parse<T extends ParserOption>(
       }
     }
     else {
-      // mark that we've encountered an argument
       hasEncounteredArguments = true
       state = parseArgument(state, argv)
     }

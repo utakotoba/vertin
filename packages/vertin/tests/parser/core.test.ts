@@ -538,7 +538,7 @@ describe('parseArgument', () => {
 
     result = parseArgument(result, argv)
     expect(result.currentIndex).toBe(2)
-    expect(result.currentArgIndex).toBe(1) // still 1 because we're ignoring excess
+    expect(result.currentArgIndex).toBe(1)
   })
 
   it('should initialize __unknownArguments__ when it does not exist', () => {
@@ -614,7 +614,7 @@ describe('parseArgument', () => {
 
     result = parseArgument(result, argv)
     expect(result.currentIndex).toBe(2)
-    expect(result.currentArgIndex).toBe(1) // still 1 because we're including excess
+    expect(result.currentArgIndex).toBe(1)
     expect(result.result.__unknownArguments__).toEqual(['excess.txt'])
   })
 

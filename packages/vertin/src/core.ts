@@ -54,7 +54,6 @@ export function createRuntime(
   return async (argv?: string[]) => {
     const args = argv ?? processArgv
 
-    // match command using the matcher
     const matchResult = matchCommands(args, topLevelCommands, option.rootCommand)
 
     if (!matchResult.command) {
