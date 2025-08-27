@@ -116,7 +116,7 @@ export interface RootCommandOption {
  * as well other useful context for the command handler,
  * providing a well DX with intellisense.
  */
-export type CommandContext<T extends CommandOption = CommandOption>
+export type CommandContext<T extends CommandOption | RootCommandOption>
   = _Parsed<never, T['arguments'], T['flags']> & {
     // TODO: add more useful context here
   }
@@ -129,7 +129,7 @@ export type CommandContext<T extends CommandOption = CommandOption>
  * It can be a synchronous or asynchronous function,
  * and it will be called with the {@link CommandContext}.
  */
-export type CommandHandler<T extends CommandOption = CommandOption>
+export type CommandHandler<T extends CommandOption | RootCommandOption = CommandOption | RootCommandOption>
  = ((context: CommandContext<T>) => void)
    | ((context: CommandContext<T>) => Promise<void>)
 
