@@ -1,5 +1,5 @@
 import type { _ParserContext } from './context'
-import type { _Parsed, Parser } from './types/index'
+import type { _ArgumentParameterOption, _FlagParameterOption, _Parsed, Parser } from './types/index'
 import type { ParserOption } from './types/options'
 import { createParserContext } from './context'
 import { isFlag, parseArgument, parseFlag, validateRequiredParameters } from './core'
@@ -15,7 +15,16 @@ import { createInitialState } from './state'
  * @param options - The parser configuration options
  * @returns A parser function that takes argv and returns parsed results
  */
-export function createParser<T extends ParserOption>(options: T): Parser<T> {
+export function createParser<T extends ParserOption>(
+  options: T & {
+    readonly arguments?: {
+      [K in keyof T['arguments']]: _ArgumentParameterOption<NonNullable<T['arguments']>[K]>
+    }
+    readonly flags?: {
+      [K in keyof T['flags']]: _FlagParameterOption<NonNullable<T['flags']>[K]>
+    }
+  },
+): Parser<T> {
   // context as the internal state of the parser
   const context = createParserContext(options)
 
