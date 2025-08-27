@@ -35,17 +35,16 @@ export function createParser<T extends ParserOption>(
 
 /**
  * Core parsing logic that processes argv tokens sequentially.
+ *
+ * @param argv - The command line arguments array (should exclude the first two elements)
+ * @param context - The parser context
+ * @returns The parsed results
  */
 function _parse<T extends ParserOption>(
   argv: string[],
   context: _ParserContext,
 ): _Parsed<T> {
   let state = createInitialState(context)
-
-  // skip the first two elements (node executable and script name) for CLI compatibility
-  // this matches the standard behavior of process.argv
-  const startIndex = Math.min(2, argv.length)
-  state.currentIndex = startIndex
 
   let hasEncounteredArguments = false
 
