@@ -1,7 +1,7 @@
 {
   "name": "vertin",
   "type": "module",
-  "version": "0.2.0-dev",
+  "version": "0.3.0-dev",
   "description": "A universal command line app helper",
   "author": "Akiyama Kohane <echo.aimless@gmail.com>",
   "license": "MPL-2.0",
