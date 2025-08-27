@@ -1,7 +1,7 @@
 // core runtime functionality
 export { createRuntime } from './core'
 // command definition helpers
-export { defineCommand, defineRootCommand } from './helper'
+export { defineApp, defineCommand, defineRootCommand } from './helper'
 // command matching and execution
 export { DFSMatch, matchCommands } from './matcher'
 
