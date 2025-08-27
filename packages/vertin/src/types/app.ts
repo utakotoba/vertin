@@ -69,6 +69,8 @@ export interface AppOption {
   }
 }
 
+export type AppRunner = (argv?: string[]) => Promise<void>
+
 export interface App {
   /**
    * The config option of a Vertin application.
@@ -81,5 +83,5 @@ export interface App {
    * You can pass the argv array manually, if no specified,
    * Vertin will automatically read it from your runtime.
    */
-  readonly run: (argv?: string[]) => Promise<void>
+  readonly run: AppRunner
 }
