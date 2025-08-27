@@ -1,6 +1,7 @@
 import type { App, AppOption } from './types/app'
 import type { Command, CommandHandler, CommandOption, RootCommandOption } from './types/command'
 import type { _ArgumentParameterOption, _FlagParameterOption } from '@/parser'
+import { createRuntime } from './core'
 
 /**
  * Defines a command with typed parameters and handler.
@@ -136,8 +137,6 @@ export function defineApp<T extends AppOption>(
 ): App {
   return {
     option,
-    run: async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000)) // dummy placeholder
-    },
+    run: createRuntime(option),
   }
 }
