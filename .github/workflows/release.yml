@@ -27,6 +27,21 @@ jobs:
       - name: Build packages
         run: bun run build
 
+      - name: Type check packages
+        run: |
+          set -e
+          for pkg in packages/*; do
+            if [ -f "$pkg/tsconfig.json" ]; then
+              echo "Type checking for $pkg..."
+              if bun tsc --noEmit -p "$pkg"; then
+                echo "$pkg type check passed"
+              fi
+            fi
+          done
+
+      - name: Run tests
+        run: bun run test
+
       - name: Publish to npm
         run: |
           cd packages/vertin
